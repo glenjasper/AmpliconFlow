@@ -137,28 +137,34 @@ nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile standard \
   -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
   --threads 15
-
+```
+```bash
 nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile standard \
   -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
-
+```
+```bash
 nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile docker \
   -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
   --threads 15
-
+```
+```bash
 nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile docker \
   -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
-
+```
+```bash
 nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile singularity \
   -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
   --threads 15
-
+```
+```bash
 nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
   -profile singularity \
   -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
+```
 
 ## 🧪 Dados de teste
 
@@ -193,6 +199,7 @@ As saídas finais são organizadas por abordagem.
 output_path/
 └── abundance_asv/
     └── *.tsv
+```
 
 ### 🔹 OTU
 
@@ -200,6 +207,7 @@ output_path/
 output_path/
 └── abundance_otu/
     └── *.tsv
+```
 
 Além disso, o pipeline gera:
 
@@ -220,4 +228,5 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
