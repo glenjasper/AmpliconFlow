@@ -13,7 +13,6 @@ O pipeline foi projetado para rodar de forma **idêntica** em:
 - Suporte a **ASV** e **OTU** em um único workflow
 - Execução transparente em **local / Docker / Singularity**
 - Verificação automática de dependências no modo local
-- Interrupção controlada em caso de “vazio biológico”
 - Arquitetura modular e extensível
 - Resultados reprodutíveis e auditáveis
 
@@ -44,9 +43,8 @@ Fluxo geral:
 6. Pré-clusterização  
 7. Remoção de quimeras (de novo + referência)  
 8. Clusterização em OTUs  
-9. Construção de banco BLAST  
-10. Classificação taxonômica  
-11. Tabela final de abundância  
+9. Classificação taxonômica  
+10. Tabela final de abundância  
 
 ## 📂 Estrutura do projeto
 
@@ -104,7 +102,7 @@ O pipeline possui suporte nativo a containers.
   - Cutadapt
   - BLAST+
   - FastQC
-  - Python 3 + Biopython
+  - Python 3 + libraries (eg. Biopython)
 
 ### Singularity / Apptainer
 
@@ -171,7 +169,7 @@ As saídas finais são organizadas por abordagem.
 ```text
 output_path/
 └── abundance_asv/
-    └── *.tsv
+    └── *.csv
 ```
 
 ### 🔹 OTU
@@ -179,14 +177,13 @@ output_path/
 ```text
 output_path/
 └── abundance_otu/
-    └── *.tsv
+    └── *.csv
 ```
 
 Além disso, o pipeline gera:
 
 - FASTA finais (ASVs ou OTUs)
 - Tabelas intermediárias
-- Bancos BLAST (OTU)
 - Relatórios FastQC (quando habilitado)
 
 ## 👤 Autor
@@ -197,4 +194,3 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
-
