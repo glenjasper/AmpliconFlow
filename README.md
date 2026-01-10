@@ -72,7 +72,8 @@ AmpliconFlow/
 │   ├── get_abundances_table_otu.py
 │   └── ...
 ├── docker/
-│   └── Dockerfile
+│   ├── Dockerfile
+│   └── requirements.txt
 └── README.md
 ```
 
@@ -87,9 +88,6 @@ Quando executado **sem containers**, as seguintes ferramentas devem estar dispon
 - `cutadapt`
 - `blastn`
 - `makeblastdb`
-
-### 🔹 Opcionais
-
 - `fastqc`
 
 > O pipeline verifica automaticamente essas dependências ao iniciar no modo local.
@@ -118,23 +116,27 @@ O pipeline possui suporte nativo a containers.
 
 Todos os modos abaixo foram **testados com sucesso**.
 
-### 🔹 Execução local / Docker / Singularity
-
+### ASV – Execução local
 ```bash
 nextflow run AmpliconFlow -profile standard -params-file config_asv.yml
 ```
+### OTU – Execução local
 ```bash
 nextflow run AmpliconFlow -profile standard -params-file config_otu.yml
 ```
+### ASV + Docker
 ```bash
 nextflow run AmpliconFlow -profile docker -params-file config_asv.yml
 ```
+### OTU + Docker
 ```bash
 nextflow run AmpliconFlow -profile docker -params-file config_otu.yml
 ```
+### ASV + Singularity (HPC)
 ```bash
 nextflow run AmpliconFlow -profile singularity -params-file config_asv.yml
 ```
+### OTU + Singularity (HPC)
 ```bash
 nextflow run AmpliconFlow -profile singularity -params-file config_otu.yml
 ```
@@ -195,3 +197,4 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
