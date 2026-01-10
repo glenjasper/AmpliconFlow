@@ -82,6 +82,7 @@ AmpliconFlow/
 ├── docker/
 │   └── Dockerfile
 └── README.md
+```
 
 ## ⚙️ Dependências (execução local)
 
@@ -219,3 +220,4 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
