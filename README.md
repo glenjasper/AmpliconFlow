@@ -110,6 +110,20 @@ O pipeline possui suporte nativo a containers.
 - Compatível com ambientes HPC
 - `autoMounts = true` habilitado no profile
 
+## ⚠️ Requisitos do sistema (IMPORTANTE)
+
+### Docker
+- Docker instalado
+- Usuário precisa estar no grupo `docker`
+- Não é necessário sudo
+
+### Singularity / Apptainer (HPC)
+- Apptainer ≥ 1.1
+- Instalado sem setuid
+- User namespaces habilitados
+
+⚠️ Caso contrário, o pipeline pode exigir privilégios de root.
+
 ## 🚀 Modos de execução
 
 Todos os modos abaixo foram **testados com sucesso**.
@@ -194,3 +208,4 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
