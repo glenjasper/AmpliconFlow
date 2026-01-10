@@ -7,8 +7,6 @@ O pipeline foi projetado para rodar de forma **idêntica** em:
 - ambientes com **Docker**,
 - ambientes **HPC** com **Singularity/Apptainer**.
 
----
-
 ## 📌 Principais características
 
 - Implementado em **Nextflow DSL2**
@@ -18,8 +16,6 @@ O pipeline foi projetado para rodar de forma **idêntica** em:
 - Interrupção controlada em caso de “vazio biológico”
 - Arquitetura modular e extensível
 - Resultados reprodutíveis e auditáveis
-
----
 
 ## 🧬 Abordagens suportadas
 
@@ -37,8 +33,6 @@ Fluxo geral:
 9. Classificação taxonômica  
 10. Tabela final de abundância  
 
----
-
 ### 🔹 OTU (Operational Taxonomic Units)
 
 Fluxo geral:
@@ -53,8 +47,6 @@ Fluxo geral:
 9. Construção de banco BLAST  
 10. Classificação taxonômica  
 11. Tabela final de abundância  
-
----
 
 ## 📂 Estrutura do projeto
 
@@ -102,8 +94,6 @@ Quando executado **sem containers**, as seguintes ferramentas devem estar dispon
 
 > O pipeline verifica automaticamente essas dependências ao iniciar no modo local.
 
----
-
 ## 🐳 Containers
 
 O pipeline possui suporte nativo a containers.
@@ -124,8 +114,6 @@ O pipeline possui suporte nativo a containers.
 - Compatível com ambientes HPC
 - `autoMounts = true` habilitado no profile
 
----
-
 ## 🚀 Modos de execução
 
 Todos os modos abaixo foram **testados com sucesso**.
@@ -133,37 +121,22 @@ Todos os modos abaixo foram **testados com sucesso**.
 ### 🔹 Execução local / Docker / Singularity
 
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile standard \
-  -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
-  --threads 15
+nextflow run AmpliconFlow -profile standard -params-file config_asv.yml
 ```
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile standard \
-  -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
+nextflow run AmpliconFlow -profile standard -params-file config_otu.yml
 ```
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile docker \
-  -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
-  --threads 15
+nextflow run AmpliconFlow -profile docker -params-file config_asv.yml
 ```
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile docker \
-  -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
+nextflow run AmpliconFlow -profile docker -params-file config_otu.yml
 ```
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile singularity \
-  -params-file /home/data/glen/workstation/nf/config/config_server_asv.yml \
-  --threads 15
+nextflow run AmpliconFlow -profile singularity -params-file config_asv.yml
 ```
 ```bash
-nextflow run /home/data/glen/workstation/nf/AmpliconFlow \
-  -profile singularity \
-  -params-file /home/data/glen/workstation/nf/config/config_server_otu.yml
+nextflow run AmpliconFlow -profile singularity -params-file config_otu.yml
 ```
 
 ## 🧪 Dados de teste
@@ -186,8 +159,6 @@ O pipeline valida automaticamente:
 - existência dos arquivos
 - pareamento correto R1/R2
 - formatos suportados
-
----
 
 ## 📤 Saídas do pipeline
 
@@ -216,17 +187,11 @@ Além disso, o pipeline gera:
 - Bancos BLAST (OTU)
 - Relatórios FastQC (quando habilitado)
 
----
-
 ## 👤 Autor
 
 **Glen Jasper**  
 GitHub: <https://github.com/glenjasper>
 
----
-
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
-
-
