@@ -62,8 +62,8 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 | approach | string | sim | — | Define a abordagem analítica do pipeline. `asv` executa a inferência de **Amplicon Sequence Variants**. `otu` executa a **clusterização em Operational Taxonomic Units**. |
 | samples_path | path | sim | — | Diretório contendo os arquivos FASTQ pareados (R1 / R2) de entrada. |
 | output_path | path | sim | results | Diretório onde todos os resultados do pipeline serão escritos. |
-| threads | integer | não | 10 | Número máximo de threads utilizadas pelos processos paralelizáveis. |
-| quality_check | boolean | não | false | Se `true`, gera relatórios FastQC em múltiplas etapas do pipeline. |
+| threads | integer | sim | 10 | Número máximo de threads utilizadas pelos processos paralelizáveis. |
+| quality_check | boolean | condicional | false | Se `true`, gera relatórios FastQC em múltiplas etapas do pipeline. |
 
 ### Banco de dados de referência
 
@@ -76,7 +76,7 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| min_ovlen | integer | não | 20 | Comprimento mínimo de sobreposição exigido para o merge de reads R1/R2. |
+| min_ovlen | integer | sim | 20 | Comprimento mínimo de sobreposição exigido para o merge de reads R1/R2. |
 
 ### Remoção de primers
 
@@ -95,9 +95,9 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| maxee | float | não | 0.8 | Número máximo de erros esperados (expected errors) permitido por read. |
-| minlen | integer | não | 350 | Comprimento mínimo do read após filtragem por qualidade. |
-| maxlen | integer | não | vazio | Comprimento máximo do read. Se vazio ou não definido, o filtro de comprimento máximo é desativado. |
+| maxee | float | sim | 0.8 | Número máximo de erros esperados (expected errors) permitido por read. |
+| minlen | integer | sim | 350 | Comprimento mínimo do read após filtragem por qualidade. |
+| maxlen | integer | sim | vazio | Comprimento máximo do read. Se vazio ou não definido, o filtro de comprimento máximo é desativado. |
 
 ### Parâmetros específicos para ASV
 
@@ -306,6 +306,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
