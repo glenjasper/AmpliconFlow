@@ -99,8 +99,6 @@ O que muda entre os modos é **como as dependências são providas**.
 | `docker`      | Docker container            | Workstations / servidores |
 | `singularity` | Singularity / Apptainer     | HPC                        |
 
----
-
 ## ⚙️ Dependências
 
 ### 🔹 Execução local (`-profile standard`)
@@ -117,8 +115,6 @@ Quando executado **sem Conda ou containers**, as seguintes ferramentas devem est
 
 > No modo `standard`, o pipeline verifica automaticamente a presença dessas ferramentas antes da execução.
 
----
-
 ### 🔹 Execução com Conda (`-profile conda`)
 
 - As dependências são resolvidas automaticamente via arquivos em `envs/`
@@ -126,8 +122,6 @@ Quando executado **sem Conda ou containers**, as seguintes ferramentas devem est
 - Ideal para ambientes HPC restritivos
 
 > No modo `conda`, **não é feita verificação do PATH do sistema**, pois todas as ferramentas são fornecidas pelos environments Conda.
-
----
 
 ## 🐳 Containers
 
@@ -141,16 +135,12 @@ Quando executado **sem Conda ou containers**, as seguintes ferramentas devem est
   - Python + bibliotecas científicas
 - Requer acesso ao Docker daemon (usuário no grupo `docker`)
 
----
-
 ### Singularity / Apptainer
 
 - A imagem é derivada automaticamente da imagem Docker
 - Compatível com ambientes HPC
 - Não requer privilégios de root
 - `autoMounts = true` habilitado no profile
-
----
 
 ## ⚠️ Requisitos do sistema
 
@@ -240,4 +230,5 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
