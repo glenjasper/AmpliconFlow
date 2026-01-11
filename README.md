@@ -52,9 +52,6 @@ Fluxo geral:
 ## 📂 Estrutura do projeto
 
 ```text
-## 📂 Estrutura do projeto
-
-```text
 AmpliconFlow/
 ├── main.nf
 ├── nextflow.config
@@ -230,5 +227,6 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
