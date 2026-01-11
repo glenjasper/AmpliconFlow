@@ -147,6 +147,56 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 | cluster_identity | float | 0.97 | — | Identidade mínima utilizada para a clusterização de reads em OTUs. |
 | blast_identity | float | 0.97 | — | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 
+## 📄 Exemplo de arquivo de configuração (para `ASV`)
+
+Abaixo está um exemplo completo de arquivo de configuração para execução do AmpliconFlow no modo `ASV` (Amplicon Sequence Variants).
+
+```bash
+# ---------------------------------
+# AmpliconFlow configuration file
+# ---------------------------------
+
+# Pipeline mode (asv or otu)
+approach: asv
+
+# Input / Output
+samples_path: /your_path/data
+output_path: /your_path/output
+
+# Reference database (silva or unite)
+database_type: silva
+database_fasta: /your_path/db/SILVA_138.2_SSURef_NR99_tax_silva.fasta
+
+# Resources
+threads: 20
+
+# Quality control (true: enable FastQC reports)
+quality_check: true
+
+# Read merging
+min_ovlen: 20           # minimum overlap length
+
+# Primer handling
+cut_primers: true
+primers_fasta: /your_path/illumina.primers.16s.fa
+
+# Subsampling (primer check)
+subset_size: 1000
+
+# Read filtering
+maxee: 0.8              # maximum expected errors
+minlen: 350             # minimum read length
+maxlen: 500             # maximum read length (optional: empty disables)
+
+# ASV-specific parameters (used only when approach: asv)
+high_identity: 0.99     # identity for ASV counting
+cutoff: 0.8             # taxonomy confidence cutoff
+
+# OTU-specific parameters (used only when approach: otu)
+cluster_identity:       # identity threshold for OTU clustering
+blast_identity:         # minimum identity for BLAST taxonomic assignment
+```
+
 ## ⚙️ Modos de execução e ambientes
 
 O **executor** utilizado é sempre `local` (os processos são executados no nó atual).  
@@ -290,6 +340,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
