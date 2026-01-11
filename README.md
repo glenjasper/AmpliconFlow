@@ -83,6 +83,69 @@ AmpliconFlow/
 │   └── requirements.txt
 └── README.md
 ```
+## ⚙️ Parâmetros de configuração
+
+O comportamento do **AmpliconFlow** é controlado por um arquivo de parâmetros `.yml`, passado via `-params-file`.
+
+A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e o significado biológico ou computacional de cada opção.
+
+### Parâmetros gerais do pipeline
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| approach | string | sim | — | Define a abordagem analítica do pipeline. `asv` executa a inferência de **Amplicon Sequence Variants**, produzindo variantes exatas após denoising. `otu` executa a **clusterização em Operational Taxonomic Units**, geralmente a 97% de identidade. |
+| samples_path | path | sim | — | Diretório contendo os arquivos FASTQ pareados (R1 / R2) de entrada. |
+| output_path | path | sim | results | Diretório onde todos os resultados do pipeline serão escritos. |
+| threads | integer | não | 10 | Número máximo de threads utilizadas pelos processos paralelizáveis. |
+| quality_check | boolean | não | false | Se `true`, gera relatórios FastQC em múltiplas etapas do pipeline. |
+
+### Banco de dados de referência
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| database_type | string | sim | — | Tipo do banco de dados taxonômico. `silva` indica banco de rRNA (ex.: 16S/18S). `unite` indica banco específico para ITS (fungos). |
+| database_fasta | path | sim | — | Arquivo FASTA contendo o banco de dados de referência correspondente ao `database_type`. |
+
+### Merge de reads pareados
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| min_ovlen | integer | não | 20 | Comprimento mínimo de sobreposição exigido para o merge de reads R1/R2. |
+
+### Remoção de primers
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| cut_primers | boolean | não | false | Ativa ou desativa a remoção de primers a partir das sequências merged. |
+| primers_fasta | path | condicional | — | Arquivo FASTA contendo os primers forward e reverse. Obrigatório quando `cut_primers = true`. |
+
+### Subamostragem (checagem de primers)
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| subset_size | integer | não | 1000 | Número de reads subamostrados para avaliar a presença e orientação dos primers. |
+
+### Filtragem de reads
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| maxee | float | não | 0.8 | Número máximo de erros esperados (expected errors) permitido por read. |
+| minlen | integer | não | 350 | Comprimento mínimo do read após filtragem por qualidade. |
+| maxlen | integer | não | vazio | Comprimento máximo do read. Se vazio ou não definido, o filtro de comprimento máximo é desativado. |
+
+### Parâmetros específicos para ASV
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| high_identity | float | não | 0.99 | Identidade mínima utilizada para mapear reads filtrados de volta às ASVs inferidas. |
+| cutoff | float | não | 0.8 | Cutoff de confiança para classificação taxonômica via método SINTAX. |
+
+### Parâmetros específicos para OTU
+
+| Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
+|----------|------|-------------|--------------|-----------|
+| cluster_identity | float | sim | — | Identidade mínima utilizada para a clusterização de reads em OTUs (ex.: 0.97). |
+| blast_identity | float | sim | — | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 
 ## ⚙️ Modos de execução e ambientes
 
@@ -227,6 +290,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
