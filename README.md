@@ -2,8 +2,10 @@
 
 **AmpliconFlow** é um pipeline reprodutível e escalável, desenvolvido em **Nextflow DSL2**, para análise de dados de sequenciamento de amplicons (por exemplo, 16S rRNA e ITS), suportando abordagens **ASV (Amplicon Sequence Variants)** e **OTU (Operational Taxonomic Units)**.
 
-O pipeline foi projetado para rodar de forma **idêntica** em:
-- execução local,
+O pipeline foi projetado para rodar de forma **consistente e transparente** em diferentes ambientes computacionais, incluindo:
+
+- execução local (PATH do sistema),
+- execução com **Conda** (modo fallback, sem containers),
 - ambientes com **Docker**,
 - ambientes **HPC** com **Singularity/Apptainer**.
 
@@ -11,8 +13,9 @@ O pipeline foi projetado para rodar de forma **idêntica** em:
 
 - Implementado em **Nextflow DSL2**
 - Suporte a **ASV** e **OTU** em um único workflow
-- Execução transparente em **local / Docker / Singularity**
-- Verificação automática de dependências no modo local
+- Múltiplos modos de execução (**local / conda / Docker / Singularity**)
+- Detecção automática do ambiente de execução
+- Verificação de dependências apenas quando necessário
 - Arquitetura modular e extensível
 - Resultados reprodutíveis e auditáveis
 
@@ -49,6 +52,9 @@ Fluxo geral:
 ## 📂 Estrutura do projeto
 
 ```text
+## 📂 Estrutura do projeto
+
+```text
 AmpliconFlow/
 ├── main.nf
 ├── nextflow.config
@@ -69,72 +75,114 @@ AmpliconFlow/
 │   ├── get_abundances_table_asv.py
 │   ├── get_abundances_table_otu.py
 │   └── ...
+├── envs/
+│   ├── trimmer.yml
+│   ├── vsearch.yml
+│   ├── blast.yml
+│   ├── python.yml
+│   └── ...
 ├── docker/
 │   ├── Dockerfile
 │   └── requirements.txt
 └── README.md
 ```
 
-## ⚙️ Dependências (execução local)
+## ⚙️ Modos de execução e ambientes
 
-Quando executado **sem containers**, as seguintes ferramentas devem estar disponíveis no `PATH`.
+O **executor** utilizado é sempre `local` (os processos são executados no nó atual).  
+O que muda entre os modos é **como as dependências são providas**.
 
-### 🔹 Obrigatórias
+| Profile       | Ambiente de execução        | Uso recomendado            |
+|---------------|-----------------------------|----------------------------|
+| `standard`    | PATH do sistema             | Uso local pessoal          |
+| `conda`       | Conda environments isolados | HPC sem containers         |
+| `docker`      | Docker container            | Workstations / servidores |
+| `singularity` | Singularity / Apptainer     | HPC                        |
 
+---
+
+## ⚙️ Dependências
+
+### 🔹 Execução local (`-profile standard`)
+
+Quando executado **sem Conda ou containers**, as seguintes ferramentas devem estar disponíveis no `PATH`:
+
+#### Obrigatórias
 - `python3`
 - `vsearch`
 - `cutadapt`
 - `blastn`
 - `makeblastdb`
+
+#### Opcionais
 - `fastqc`
 
-> O pipeline verifica automaticamente essas dependências ao iniciar no modo local.
+> No modo `standard`, o pipeline verifica automaticamente a presença dessas ferramentas antes da execução.
+
+---
+
+### 🔹 Execução com Conda (`-profile conda`)
+
+- As dependências são resolvidas automaticamente via arquivos em `envs/`
+- Não requer Docker nem Singularity
+- Ideal para ambientes HPC restritivos
+
+> No modo `conda`, **não é feita verificação do PATH do sistema**, pois todas as ferramentas são fornecidas pelos environments Conda.
+
+---
 
 ## 🐳 Containers
 
-O pipeline possui suporte nativo a containers.
-
 ### Docker
 
-- **Imagem**:
-- Contém todas as dependências do pipeline, incluindo:
+- A imagem contém todas as dependências do pipeline:
   - VSEARCH
   - Cutadapt
   - BLAST+
   - FastQC
-  - Python 3 + libraries (eg. Biopython)
+  - Python + bibliotecas científicas
+- Requer acesso ao Docker daemon (usuário no grupo `docker`)
+
+---
 
 ### Singularity / Apptainer
 
-- A imagem é construída automaticamente a partir do Docker
+- A imagem é derivada automaticamente da imagem Docker
 - Compatível com ambientes HPC
+- Não requer privilégios de root
 - `autoMounts = true` habilitado no profile
 
-## ⚠️ Requisitos do sistema (IMPORTANTE)
+---
+
+## ⚠️ Requisitos do sistema
 
 ### Docker
 - Docker instalado
-- Usuário precisa estar no grupo `docker`
-- Não é necessário sudo
+- Usuário no grupo `docker`
+- Não é necessário `sudo`
 
-### Singularity / Apptainer (HPC)
+### Singularity / Apptainer
 - Apptainer ≥ 1.1
-- Instalado sem setuid
+- Instalado sem `setuid`
 - User namespaces habilitados
-
-⚠️ Caso contrário, o pipeline pode exigir privilégios de root.
 
 ## 🚀 Modos de execução
 
-Todos os modos abaixo foram **testados com sucesso**.
-
-### ASV – Execução local
+### ASV – Local (PATH do sistema)
 ```bash
 nextflow run AmpliconFlow -profile standard -params-file config_asv.yml
 ```
-### OTU – Execução local
+### OTU – Local (PATH do sistema)
 ```bash
 nextflow run AmpliconFlow -profile standard -params-file config_otu.yml
+```
+### ASV – Conda (sem containers)
+```bash
+nextflow run AmpliconFlow -profile conda -params-file config_asv.yml
+```
+### OTU – Conda (sem containers)
+```bash
+nextflow run AmpliconFlow -profile conda -params-file config_otu.yml
 ```
 ### ASV + Docker
 ```bash
@@ -166,14 +214,6 @@ O pipeline foi validado utilizando:
 - `.fastq.gz`
 - `.fq.gz`
 
-Inclui conjuntos pequenos de dados para testes rápidos.
-
-O pipeline valida automaticamente:
-
-- existência dos arquivos
-- pareamento correto R1/R2
-- formatos suportados
-
 ## 📤 Saídas do pipeline
 
 As saídas finais são organizadas por abordagem.
@@ -182,7 +222,7 @@ As saídas finais são organizadas por abordagem.
 
 ```text
 output_path/
-└── abundance_asv/
+└── abundance/
     └── *.csv
 ```
 
@@ -190,15 +230,9 @@ output_path/
 
 ```text
 output_path/
-└── abundance_otu/
+└── abundance/
     └── *.csv
 ```
-
-Além disso, o pipeline gera:
-
-- FASTA finais (ASVs ou OTUs)
-- Tabelas intermediárias
-- Relatórios FastQC (quando habilitado)
 
 ## 👤 Autor
 
@@ -208,4 +242,3 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
-
