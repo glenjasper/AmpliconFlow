@@ -113,8 +113,6 @@ Quando executado **sem Conda ou containers**, as seguintes ferramentas devem est
 - `cutadapt`
 - `blastn`
 - `makeblastdb`
-
-#### Opcionais
 - `fastqc`
 
 > No modo `standard`, o pipeline verifica automaticamente a presença dessas ferramentas antes da execução.
@@ -242,3 +240,4 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
