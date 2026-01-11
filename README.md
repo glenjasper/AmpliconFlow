@@ -137,15 +137,15 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| high_identity | float | não | 0.99 | Identidade mínima utilizada para mapear reads filtrados de volta às ASVs inferidas. |
-| cutoff | float | não | 0.8 | Cutoff de confiança para classificação taxonômica via método SINTAX. |
+| high_identity | float | sim | 0.99 | Identidade mínima utilizada para mapear reads filtrados de volta às ASVs inferidas. |
+| cutoff | float | sim | 0.8 | Cutoff de confiança para classificação taxonômica via método SINTAX. |
 
 ### Parâmetros específicos para OTU
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| cluster_identity | float | sim | — | Identidade mínima utilizada para a clusterização de reads em OTUs (ex.: 0.97). |
-| blast_identity | float | sim | — | Identidade mínima exigida para atribuição taxonômica via BLAST. |
+| cluster_identity | float | 0.97 | — | Identidade mínima utilizada para a clusterização de reads em OTUs. |
+| blast_identity | float | 0.97 | — | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 
 ## ⚙️ Modos de execução e ambientes
 
@@ -290,6 +290,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
