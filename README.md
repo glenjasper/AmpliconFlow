@@ -49,40 +49,6 @@ Fluxo geral:
 9. Classificação taxonômica  
 10. Tabela final de abundância  
 
-## 📂 Estrutura do projeto
-
-```text
-AmpliconFlow/
-├── main.nf
-├── nextflow.config
-├── conf/
-│   ├── base.config
-│   └── profiles.config
-├── modules/
-│   ├── merge.nf
-│   ├── join.nf
-│   ├── filter.nf
-│   ├── dereplicate.nf
-│   ├── denoise.nf
-│   ├── taxonomyasv.nf
-│   ├── taxonomyotu.nf
-│   └── ...
-├── scripts/
-│   ├── rename_database.py
-│   ├── get_abundances_table_asv.py
-│   ├── get_abundances_table_otu.py
-│   └── ...
-├── envs/
-│   ├── trimmer.yml
-│   ├── vsearch.yml
-│   ├── blast.yml
-│   ├── python.yml
-│   └── ...
-├── docker/
-│   ├── Dockerfile
-│   └── requirements.txt
-└── README.md
-```
 ## ⚙️ Parâmetros de configuração
 
 O comportamento do **AmpliconFlow** é controlado por um arquivo de parâmetros `.yml`, passado via `-params-file`.
@@ -93,7 +59,7 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| approach | string | sim | — | Define a abordagem analítica do pipeline. `asv` executa a inferência de **Amplicon Sequence Variants**, produzindo variantes exatas após denoising. `otu` executa a **clusterização em Operational Taxonomic Units**, geralmente a 97% de identidade. |
+| approach | string | sim | — | Define a abordagem analítica do pipeline. `asv` executa a inferência de **Amplicon Sequence Variants**. `otu` executa a **clusterização em Operational Taxonomic Units**. |
 | samples_path | path | sim | — | Diretório contendo os arquivos FASTQ pareados (R1 / R2) de entrada. |
 | output_path | path | sim | results | Diretório onde todos os resultados do pipeline serão escritos. |
 | threads | integer | não | 10 | Número máximo de threads utilizadas pelos processos paralelizáveis. |
@@ -144,8 +110,8 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 
 | Parâmetro | Tipo | Obrigatório | Valor padrão | Descrição |
 |----------|------|-------------|--------------|-----------|
-| cluster_identity | float | 0.97 | — | Identidade mínima utilizada para a clusterização de reads em OTUs. |
-| blast_identity | float | 0.97 | — | Identidade mínima exigida para atribuição taxonômica via BLAST. |
+| cluster_identity | float | sim | 0.97 | Identidade mínima utilizada para a clusterização de reads em OTUs. |
+| blast_identity | float | sim | 0.97 | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 
 ## 📄 Exemplo de arquivo de configuração (para `ASV`)
 
@@ -340,6 +306,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
