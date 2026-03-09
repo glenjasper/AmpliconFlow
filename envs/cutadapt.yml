@@ -1,0 +1,6 @@
+name: ampliconflow-cutadapt
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - cutadapt=4.6

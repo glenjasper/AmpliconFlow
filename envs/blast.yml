@@ -1,0 +1,6 @@
+name: ampliconflow-blast
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - blast=2.15.0

@@ -1,0 +1,6 @@
+name: ampliconflow-vsearch
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - vsearch=2.22.1

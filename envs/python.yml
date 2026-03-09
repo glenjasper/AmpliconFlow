@@ -1,0 +1,10 @@
+name: ampliconflow-python
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - pandas=2.2.2
+  - biopython=1.85
+  - numpy=1.26.4
+  - tqdm==4.67.1

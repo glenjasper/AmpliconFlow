@@ -19,7 +19,7 @@ include { DECHIMERA_DENOVO } from './modules/dechimeradn.nf'
 include { COUNT } from './modules/count.nf'
 include { RENAME_HEAD } from './modules/renamehead.nf'
 include { TAXONOMY_ASV } from './modules/taxonomyasv.nf'
-include { ABUNDANCE_ASV } from './modules/abundanceasv.nf'
+include { ABUNDANCE } from './modules/abundance.nf'
 
 include { PRECLUSTER } from './modules/precluster.nf'
 include { DECHIMERA_REF } from './modules/dechimeraref.nf'
@@ -28,7 +28,6 @@ include { NONCHIMERA_READS } from './modules/nonchimerareads.nf'
 include { CLUSTER_OTU } from './modules/clusterotu.nf'
 include { MAKE_DB } from './modules/makedb.nf'
 include { TAXONOMY_OTU } from './modules/taxonomyotu.nf'
-include { ABUNDANCE_OTU } from './modules/abundanceotu.nf'
 
 class PipelineState { static stopped = false }
 
@@ -105,16 +104,22 @@ def checkTools() {
     pprint("WARNING: Optional tools not found: ${missingOptional.join(', ')}\n", "yellow")
   }
 
-  pprint("Tools check: OK\n", "green")
+  pprint("Tools check: OK\n", "soft_green")
 }
 
 def maybeCheckTools() {
-  if (!workflow.containerEngine) {
-    pprint("Running in LOCAL mode – checking required tools", "soft_green")
-    checkTools()
-  } else {
+  if (workflow.containerEngine) {
     pprint("Container engine detected (${workflow.containerEngine})\n", "soft_yellow")
+    return
   }
+
+  if (workflow.profile == 'conda') {
+    pprint("Running in CONDA fallback mode – tools provided by Conda environments\n", "soft_cyan")
+    return
+  }
+
+  pprint("Running in LOCAL system mode – checking required tools", "soft_green")
+  checkTools()
 }
 
 def getValidFastqFiles() {
@@ -229,6 +234,24 @@ def validateIntParam(String name,
 
 maybeCheckTools()
 
+// Docker permission sanity check
+if (workflow.containerEngine == 'docker') {
+  def checkDocker = ["bash", "-lc", "docker info >/dev/null 2>&1"].execute()
+  checkDocker.waitFor()
+
+  if (checkDocker.exitValue() != 0) {
+    throw new IllegalStateException(
+      "\nDocker was detected, but the current user cannot access the Docker daemon.\n\n" +
+      "This usually means the user is NOT in the 'docker' group.\n\n" +
+      "Ask the system administrator to run:\n" +
+      "  sudo usermod -aG docker <username>\n" +
+      "Then log out and log back in.\n\n" +
+      "Alternatively, use:\n" +
+      "  -profile singularity\n"
+    )
+  }
+}
+
 // Optional maxlen: empty value disables --maxlen in FILTER
 ch_maxlen = Channel.value( params.maxlen ?: '' )
 
@@ -280,6 +303,17 @@ if (!params.database_type) {
     throw new IllegalStateException("Invalid params.database_type='${params.database_type}'. Allowed values: ${allowedDBs.join(', ')}")
 }
 
+if (database_type == 'SILVA') {
+  if (!params.silva_taxmap)
+    throw new IllegalStateException("params.silva_taxmap is required for SILVA")
+  if (!params.silva_taxslv)
+    throw new IllegalStateException("params.silva_taxslv is required for SILVA")
+  if (!file(params.silva_taxmap).exists())
+    throw new IllegalStateException("taxmap file not found: ${params.silva_taxmap}")
+  if (!file(params.silva_taxslv).exists())
+    throw new IllegalStateException("tax_slv file not found: ${params.silva_taxslv}")
+}
+
 if (params.cut_primers) {
   if (!params.primers_fasta)
     throw new IllegalStateException("params.primers_fasta is required when params.cut_primers = true")
@@ -306,6 +340,9 @@ if (approach == 'asv') {
 if (approach == 'otu') {
   params.cluster_identity = validateFloatParam('cluster_identity', params.cluster_identity, 0.97, 0, 1)
   params.blast_identity = validateFloatParam('blast_identity', params.blast_identity, 0.97, 0, 1)
+  params.blast_coverage = validateFloatParam('blast_coverage', params.blast_coverage, 0.90, 0, 1)
+  params.blast_max_target = validateIntParam('blast_max_target', params.blast_max_target, 20, 1, null)
+  params.blast_evalue = validateFloatParam('blast_evalue', params.blast_evalue, 1e-20, 0, null)
 }
 
 pprint("Pipeline starting with configuration:", "soft_white")
@@ -317,13 +354,17 @@ if (params.cut_primers) {
 }
 pprint(" • database (type): ${LABELS.database[database_type]}", "soft_white")
 pprint(" • database (sequences): ${params.database_fasta}", "soft_white")
+if (database_type == 'SILVA') {
+  pprint("   - taxmap file: ${params.silva_taxmap}", "soft_white")
+  pprint("   - taxslv file: ${params.silva_taxslv}", "soft_white")
+}
 pprint(" • threads: ${params.threads}\n", "soft_white")
 
 workflow {
   main:
   {
     def validFiles = getValidFastqFiles()
-    
+
     if (params.quality_check) {
       def validPaths = validFiles.collect { it.toString() }
       raw_reads = Channel.from(validPaths)
@@ -334,7 +375,7 @@ workflow {
       .from(validFiles)
       .map { f ->
         def name = f.name
-        def m = name =~ /(.+?)(?:[_\.\-]?)(?:R?)([12]|[Ff](?:wd|orward)?|[Rr](?:ev|everse)?)(?:[_\.\-]?)\.(?:f(ast)?q|fq)(?:\.gz)?$/
+        def m = name =~ /(.+?)(?:[_\.\-]?)(?:R?)([12]|[Ff](?:wd|orward)?|[Rr](?:ev|everse)?)(?:[_\.\-]?\d+)?\.(?:f(ast)?q|fq)(?:\.gz)?$/
 
         if (!m.matches())
           throw new IllegalStateException("Cannot identify R1/R2 in filename: ${name}")
@@ -426,7 +467,7 @@ workflow {
       counted_files = checkStep("COUNT", counted_tuple)
       counted_file = counted_files.map { tab, status -> tab }
 
-      database_tuple = RENAME_HEAD(params.database_fasta, database_type.toLowerCase())
+      database_tuple = RENAME_HEAD(params.database_fasta, database_type.toLowerCase(), params.silva_taxmap ?: '', params.silva_taxslv ?: '')
       database_files = checkStep("RENAME_HEAD", database_tuple)
       database_fa = database_files.map { fa, status -> fa }
 
@@ -434,7 +475,7 @@ workflow {
       taxonomy_files = checkStep("TAXONOMY_ASV", taxonomy_tuple)
       taxonomy_file = taxonomy_files.map { tab, status -> tab }
 
-      abundance_file = ABUNDANCE_ASV(counted_file, taxonomy_file)
+      abundance_file = ABUNDANCE(taxonomy_file, counted_file, database_type.toLowerCase(), approach)
     } else {
       preclustered_tuple = PRECLUSTER(dereplicated_fa, params.cluster_identity, params.threads)
       preclustered_files = checkStep("PRECLUSTER", preclustered_tuple)
@@ -462,16 +503,20 @@ workflow {
       clustered_fa = clustered_files.map { fa, uc, tab, biom, status -> fa }
       clustered_tab = clustered_files.map { fa, uc, tab, biom, status -> tab }
 
-      database_tuple = MAKE_DB(params.database_fasta, database_type.toLowerCase())
+      database_tuple = RENAME_HEAD(params.database_fasta, database_type.toLowerCase(), params.silva_taxmap ?: '', params.silva_taxslv ?: '')
+      database_files = checkStep("RENAME_HEAD", database_tuple)
+      database_fa = database_files.map { fa, status -> fa }
+
+      database_tuple = MAKE_DB(database_fa, database_type.toLowerCase())
       database_files = checkStep("MAKE_DB", database_tuple)
       database_prefix = database_files.map { prefix, bins, status -> prefix }
       database_bins = database_files.map { prefix, bins, status -> bins }
 
-      taxonomy_tuple = TAXONOMY_OTU(clustered_fa, params.blast_identity, database_prefix, database_bins, params.threads)
+      taxonomy_tuple = TAXONOMY_OTU(clustered_fa, params.blast_identity, params.blast_coverage, params.blast_max_target, params.blast_evalue, database_prefix, database_bins, params.threads)
       taxonomy_files = checkStep("TAXONOMY_OTU", taxonomy_tuple)
       taxonomy_file = taxonomy_files.map { tab, status -> tab }
 
-      abundance_file = ABUNDANCE_OTU(taxonomy_file, clustered_tab, database_type.toLowerCase())
+      abundance_file = ABUNDANCE(taxonomy_file, clustered_tab, database_type.toLowerCase(), approach)
     }
   }
 }
@@ -485,13 +530,13 @@ workflow.onComplete {
     if (workflow.success) {
       pprint("\nPipeline completed successfully!", "green")
 
-      def dir = new File("${params.output_path}/abundance_${approach}")
+      def dir = new File("${params.output_path}/abundance")
       if (dir.exists()) {
         def files = dir.listFiles()?.findAll { it.isFile() }
         if (files) {
           pprint("Output files:", "soft_white")
           files.each { file ->
-            pprint(" • ${params.output_path}/abundance_${approach}/${file.getName()}", "soft_white")
+            pprint(" • ${params.output_path}/abundance/${file.getName()}", "soft_white")
           }
         }
       }
