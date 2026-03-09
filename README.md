@@ -161,6 +161,9 @@ cutoff: 0.8             # taxonomy confidence cutoff
 # OTU-specific parameters (used only when approach: otu)
 cluster_identity:       # identity threshold for OTU clustering
 blast_identity:         # minimum identity for BLAST taxonomic assignment
+blast_coverage:         # minimum query coverage per HSP for BLAST assignment
+blast_max_target:       # maximum number of target sequences returned by BLAST
+blast_evalue:           # e-value cutoff for BLAST hits
 ```
 
 ## ⚙️ Modos de execução e ambientes
@@ -306,6 +309,7 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
+
 
 
 
