@@ -12,6 +12,7 @@ from Bio.SeqRecord import SeqRecord
 python rename_database.py -d silva -i SILVA_138.2_SSURef_NR99_tax_silva.fasta --taxmap taxmap_slv_ssu_ref_nr_138.2.txt.gz --taxslv tax_slv_ssu_138.2.txt.gz
 python rename_database.py -d silva -i SILVA_138.2_SSURef_tax_silva.fasta --taxmap taxmap_slv_ssu_ref_138.2.txt.gz --taxslv tax_slv_ssu_138.2.txt.gz
 python rename_database.py -d unite -i utax_reference_dataset_19.02.2025.fasta
+python rename_database.py -d unite -i UNITE_public_19.02.2025.fasta
 python rename_database.py -d unite -i uchime_reference_dataset_untrimmed_16_10_2022.fasta
 '''
 
@@ -27,35 +28,6 @@ def format_lineage(lineage, db_type = 'silva'):
         parts.append(f'{rank}:{tax}')
 
     return 'tax=' + ','.join(parts)
-
-def format_lineage_(lineage, db_type = 'silva'):
-    lineage_format = 'tax='
-    for index, tax in enumerate(lineage):
-        index = 7 - index
-        tax = tax.replace(' ', '_')
-
-        if index == 7:
-            tax = f'd:{tax},'
-        elif index == 6:
-            tax = f'p:{tax},'
-        elif index == 5:
-            tax = f'c:{tax},'
-        elif index == 4:
-            tax = f'o:{tax},'
-        elif index == 3:
-            tax = f'f:{tax},'
-        elif index == 2:
-            tax = f'g:{tax},'
-        elif index == 1:
-            tax = tax.replace(',', '.')
-            tax = f's:{tax},'
-
-        lineage_format += tax
-
-    if lineage_format.endswith(','):
-        lineage_format = lineage_format[:-1]
-
-    return lineage_format
 
 def parse_unite_utax(header):
     """
@@ -74,9 +46,12 @@ def parse_unite_utax(header):
 
     return id_part, lineage
 
-def parse_unite_uchime(header):
+def parse_unite_others(header):
     """
-    >ID|UDBxxxx|SHxxxx|reps|k__Fungi;p__Ascomycota;...
+    UCHIME:
+      >ID|UDBxxxx|SHxxxx|reps|k__Fungi;p__Ascomycota;...
+    PUBLIC:
+      >UDBxxxx|k__Fungi;p__Basidiomycota;...;s__Cystoderma_amianthinum|SHxxxx
     """
     if '|k__' not in header:
         return None, None
@@ -85,6 +60,7 @@ def parse_unite_uchime(header):
     id_part = '|'.join(id_part.split('|')[0:3])
 
     lineage_raw = header.split('|k__')[1]
+    lineage_raw = lineage_raw.split('|')[0]
 
     lineage_raw = (lineage_raw
                    .replace('k__', '')
@@ -199,7 +175,7 @@ def edit_database_fasta(fasta_file, db_type = 'silva', taxmap_file = None, taxsl
                 id_part, lineage = parse_unite_utax(header)
 
                 if id_part is None:
-                    id_part, lineage = parse_unite_uchime(header)
+                    id_part, lineage = parse_unite_others(header)
 
                 if id_part is None or not lineage:
                     continue
