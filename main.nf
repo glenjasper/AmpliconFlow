@@ -1,6 +1,76 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
+def printHelp() {
+    println """    AmpliconFlow: AmpliconFlow is a reproducible and scalable Nextflow DSL2
+                  pipeline for amplicon sequencing analysis (e.g., 16S rRNA
+                  and ITS), supporting ASV and OTU approaches.
+
+    Version ${workflow.manifest.version}
+
+    Usage:
+      nextflow run AmpliconFlow/main.nf -profile <profile> -params-file config.yml
+
+    Required parameters:
+      --approach           asv | otu
+      --samples_path       path to FASTQ files
+      --database_type      unite | silva
+      --database_fasta     path to FASTA database
+
+    Database (SILVA only):
+      --silva_taxmap       required if database_type = silva
+      --silva_taxslv       required if database_type = silva
+
+    General:
+      --output_path        (default: ./results)
+      --threads            (default: 10)
+      --quality_check      true/false
+
+    Primer handling:
+      --cut_primers        true/false
+      --primers_fasta      required if cut_primers = true
+      --subset_size        (default: 1000)
+
+    Filtering:
+      --maxee              (default: 0.8)
+      --minlen             (default: 350)
+      --maxlen             (optional)
+
+    ASV parameters:
+      --high_identity      (default: 0.99)
+      --cutoff             (default: 0.8)
+
+    OTU parameters:
+      --cluster_identity   (default: 0.97)
+      --blast_identity     (default: 0.97)
+      --blast_coverage     (default: 0.90)
+      --blast_max_target   (default: 20)
+      --blast_evalue       (default: 1e-20)
+
+    Profiles:
+      conda | docker | singularity | standard
+
+    Example:
+      nextflow run AmpliconFlow/main.nf -profile conda -params-file config.yml
+
+    Author: ${workflow.manifest.author}
+    GitHub: ${params.github}
+    """
+}
+
+params.help = params.containsKey('help') ? params.help : false
+params.version = params.containsKey('version') ? params.version : false
+
+if (params.version) {
+    println "${workflow.manifest.name} v${workflow.manifest.version}\n"
+    System.exit(0)
+}
+
+if (params.help) {
+    printHelp()
+    System.exit(0)
+}
+
 include { FASTQC as FASTQC_RAW } from './modules/qc.nf'
 include { FASTQC as FASTQC_MERGED } from './modules/qc.nf'
 include { FASTQC as FASTQC_JOINED } from './modules/qc.nf'
