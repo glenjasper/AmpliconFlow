@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <defs>
+    <linearGradient id="dnaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F4C5C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A7F6B;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2BAE66;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A7F6B;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="softShadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0F4C5C" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background clean -->
+  <rect width="380" height="100" fill="#F8F9FA" rx="10"/>
+
+  <g transform="translate(20, 0)">
+    <text x="0" y="50" 
+          font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" 
+          font-size="52" 
+          font-weight="300" 
+          fill="#0F4C5C" 
+          letter-spacing="2">
+      Amplicon
+    </text>
+    <text x="220" y="50" 
+          font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" 
+          font-size="52" 
+          font-weight="700" 
+          fill="url(#flowGrad)" 
+          letter-spacing="2">
+      Flow
+    </text>
+  </g>
+
+  <text x="20" y="72" 
+        font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" 
+        font-size="9.5" 
+        font-weight="500" 
+        fill="#B2BEC3" 
+        letter-spacing="3">
+    REPRODUCIBLE AMPLICON SEQUENCING PIPELINE
+  </text>
+
+  <rect x="20" y="85" width="340" height="2" fill="url(#flowGrad)" opacity="0.4" rx="1"/>
+</svg>
