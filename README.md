@@ -231,6 +231,16 @@ chmod +x nextflow
 sudo mv nextflow /usr/local/bin/
 ```
 
+### Help
+
+Clone o repositório e visualize as opções disponíveis:
+
+```bash
+git clone https://github.com/glenjasper/AmpliconFlow.git
+
+nextflow run AmpliconFlow/main.nf --help
+```
+
 ### Modo Docker (recomendado)
 
 🐳 Executa o pipeline dentro de um container com todas as dependências já instaladas.
