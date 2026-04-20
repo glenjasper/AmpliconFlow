@@ -2,11 +2,11 @@
 [![Docker](https://img.shields.io/badge/Docker-Enabled-blue)](https://docker.com)
 [![Singularity](https://img.shields.io/badge/Singularity-Enabled-blue)](https://sylabs.io/singularity/)
 [![Conda](https://img.shields.io/badge/Conda-Enabled-green)](https://conda.io)
-[![GitHub license](https://img.shields.io/github/license/glenjasper/AmpliconFlow)](https://github.com/glenjasper/AmpliconFlow/blob/main/LICENSE)
 [![Bioinformatics](https://img.shields.io/badge/Bioinformatics-16S%20rRNA%20%7C%20ITS-red)](https://github.com/glenjasper/AmpliconFlow)
+[![GitHub license](https://img.shields.io/github/license/glenjasper/AmpliconFlow)](https://github.com/glenjasper/AmpliconFlow/blob/main/LICENSE)
 
 <div align="center">
-  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="265%">
+  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="80%">
 </div>
 
 # AmpliconFlow
