@@ -11,11 +11,11 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
 
 ## Tabela de conteúdo
 
-- [Principais características](#-principais-características)
-- [Abordagens suportadas](#-abordagens-suportadas)
-  - [ASV (Amplicon Sequence Variants)](#-asv-amplicon-sequence-variants)
-  - [OTU (Operational Taxonomic Units)](#-otu-operational-taxonomic-units)
-- [Parâmetros de configuração](#-parâmetros-de-configuração)
+- [Principais características](#principais-características)
+- [Abordagens suportadas](#abordagens-suportadas)
+  - [ASV (Amplicon Sequence Variants)](#asv-amplicon-sequence-variants)
+  - [OTU (Operational Taxonomic Units)](#otu-operational-taxonomic-units)
+- [Parâmetros de configuração](#parâmetros-de-configuração)
   - [Parâmetros gerais do pipeline](#parâmetros-gerais-do-pipeline)
   - [Banco de dados de referência](#banco-de-dados-de-referência)
   - [Merge de reads pareados](#merge-de-reads-pareados)
@@ -24,22 +24,22 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
   - [Filtragem de reads](#filtragem-de-reads)
   - [Parâmetros específicos para ASV](#parâmetros-específicos-para-asv)
   - [Parâmetros específicos para OTU](#parâmetros-específicos-para-otu)
-- [Exemplo de arquivo de configuração (ASV)](#-exemplo-de-arquivo-de-configuração-para-asv)
-- [Modos de execução](#-modos-de-execução)
-- [Requisito geral (Nextflow)](#-requisito-geral)
-- [Modo Docker](#-modo-docker-recomendado)
-- [Modo Conda](#-modo-conda)
-- [Modo Local (manual)](#-modo-local-manual)
-- [Modo Singularity / Apptainer](#-modo-singularity--apptainer)
-- [Dica importante](#-dica-importante)
-- [Dados de teste](#-dados-de-teste)
-- [Saídas do pipeline](#-saídas-do-pipeline)
-  - [ASV](#-asv)
-  - [OTU](#-otu)
-- [Autor](#-autor)
-- [Licença](#-licença)
+- [Exemplo de arquivo de configuração (ASV)](#exemplo-de-arquivo-de-configuração-para-asv)
+- [Modos de execução](#modos-de-execução)
+- [Requisito geral](#requisito-geral)
+- [Modo Docker](#modo-docker-recomendado)
+- [Modo Conda](#modo-conda)
+- [Modo Local (manual)](#modo-local-manual)
+- [Modo Singularity / Apptainer](#modo-singularity--apptainer)
+- [Dica importante](#dica-importante)
+- [Dados de teste](#dados-de-teste)
+- [Saídas do pipeline](#saídas-do-pipeline)
+  - [ASV](#asv)
+  - [OTU](#otu)
+- [Autor](#autor)
+- [Licença](#licença)
 
-## 📌 Principais características
+## Principais características
 
 - Implementado em **Nextflow DSL2**
 - Suporte a **ASV** e **OTU** em um único workflow
@@ -49,9 +49,9 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
 - Arquitetura modular e extensível
 - Resultados reprodutíveis e auditáveis
 
-## 🧬 Abordagens suportadas
+## Abordagens suportadas
 
-### 🔹 ASV (Amplicon Sequence Variants)
+### ASV (Amplicon Sequence Variants)
 
 Fluxo geral:
 1. Merge de reads pareados  
@@ -65,7 +65,7 @@ Fluxo geral:
 9. Classificação taxonômica  
 10. Tabela final de abundância  
 
-### 🔹 OTU (Operational Taxonomic Units)
+### OTU (Operational Taxonomic Units)
 
 Fluxo geral:
 1. Merge de reads pareados  
@@ -79,7 +79,7 @@ Fluxo geral:
 9. Classificação taxonômica  
 10. Tabela final de abundância  
 
-## ⚙️ Parâmetros de configuração
+## Parâmetros de configuração
 
 O comportamento do **AmpliconFlow** é controlado por um arquivo de parâmetros `.yml`, passado via `-params-file`.
 
@@ -143,7 +143,7 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 | cluster_identity | float | sim | 0.97 | Identidade mínima utilizada para a clusterização de reads em OTUs. |
 | blast_identity | float | sim | 0.97 | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 
-## 📄 Exemplo de arquivo de configuração (para `ASV`)
+## Exemplo de arquivo de configuração (para `ASV`)
 
 Abaixo está um exemplo completo de arquivo de configuração para execução do AmpliconFlow no modo `ASV` (Amplicon Sequence Variants).
 
@@ -196,7 +196,7 @@ blast_max_target:       # maximum number of target sequences returned by BLAST
 blast_evalue:           # e-value cutoff for BLAST hits
 ```
 
-## ⚙️ Modos de execução
+## Modos de execução
 
 O AmpliconFlow pode ser executado em diferentes ambientes:
 
@@ -209,7 +209,7 @@ O AmpliconFlow pode ser executado em diferentes ambientes:
 
 Todos os modos executam o mesmo pipeline e produzem resultados equivalentes.
 
-## ⚙️ Requisito geral
+## Requisito geral
 
 O AmpliconFlow é executado via Nextflow, para todos os modos de execução.
 
@@ -221,9 +221,9 @@ chmod +x nextflow
 sudo mv nextflow /usr/local/bin/
 ```
 
-## 🐳 Modo Docker (recomendado)
+## Modo Docker (recomendado)
 
-Executa o pipeline dentro de um container com todas as dependências já instaladas.
+🐳 Executa o pipeline dentro de um container com todas as dependências já instaladas.
 Nenhuma ferramenta bioinformática precisa ser instalada manualmente.
 
 ### Requisitos
@@ -261,9 +261,9 @@ nextflow run main.nf -profile docker -params-file config.yml
 - Não é necessário instalar VSEARCH, BLAST, etc.
 - Recomendado para a maioria dos usuários
 
-## 🧪 Modo Conda
+## Modo Conda
 
-Executa o pipeline criando automaticamente ambientes Conda com todas as dependências necessárias.
+🧪 Executa o pipeline criando automaticamente ambientes Conda com todas as dependências necessárias.
 
 ### Requisitos
 
@@ -294,9 +294,9 @@ nextflow run main.nf -profile conda -params-file config.yml
 - Ideal para ambientes HPC
 - As dependências são instaladas automaticamente na primeira execução
 
-## 🧰 Modo Local (manual)
+## Modo Local (manual)
 
-Execução sem Conda ou containers. Todas as ferramentas devem ser instaladas manualmente.
+🧰 Execução sem Conda ou containers. Todas as ferramentas devem ser instaladas manualmente.
 
 ### Dependências obrigatórias
 
@@ -326,9 +326,9 @@ nextflow run main.nf -profile standard -params-file config.yml
 - O pipeline verifica automaticamente a presença das dependências
 - Recomendado apenas para usuários avançados
 
-## 🧬 Modo Singularity / Apptainer
+## Modo Singularity / Apptainer
 
-Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
+🧬 Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
 
 ### Requisitos
 
@@ -353,15 +353,15 @@ nextflow run main.nf -profile singularity -params-file config.yml
 - Compatível com ambientes HPC
 - Não requer privilégios de root
 
-## ⚡ Dica importante
+## Dica importante
 
-Use -resume para continuar execuções anteriores e evitar reprocessamento. Útil após falhas ou ajustes de parâmetros:
+⚡ Use -resume para continuar execuções anteriores e evitar reprocessamento. Útil após falhas ou ajustes de parâmetros:
 
 ```bash
 nextflow run main.nf -profile docker -params-file config.yml -resume
 ```
 
-## 🧪 Dados de teste
+## Dados de teste
 
 O pipeline foi validado utilizando:
 
@@ -374,11 +374,11 @@ O pipeline foi validado utilizando:
 - `.fastq.gz`
 - `.fq.gz`
 
-## 📤 Saídas do pipeline
+## Saídas do pipeline
 
 As saídas finais são organizadas por abordagem.
 
-### 🔹 ASV
+### ASV
 
 ```text
 output_path/
@@ -386,7 +386,7 @@ output_path/
     └── *.csv
 ```
 
-### 🔹 OTU
+### OTU
 
 ```text
 output_path/
@@ -394,11 +394,11 @@ output_path/
     └── *.csv
 ```
 
-## 👤 Autor
+## Autor
 
 **Glen Jasper**  
 GitHub: <https://github.com/glenjasper>
 
-## 📄 Licença
+## Licença
 
 Este projeto é distribuído sob a licença **MIT**.
