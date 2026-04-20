@@ -302,6 +302,7 @@ nextflow run main.nf -profile singularity -params-file config.yml
 
 ```bash
 curl -Ls https://micro.mamba.pm/install.sh | bash
+source ~/.bashrc
 ```
 
 #### Obter o pipeline
