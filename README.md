@@ -4,11 +4,9 @@
 [![Conda](https://img.shields.io/badge/Conda-Enabled-green)](https://conda.io)
 [![GitHub license](https://img.shields.io/github/license/glenjasper/AmpliconFlow)](https://github.com/glenjasper/AmpliconFlow/blob/main/LICENSE)
 [![Bioinformatics](https://img.shields.io/badge/Bioinformatics-16S%20rRNA%20%7C%20ITS-red)](https://github.com/glenjasper/AmpliconFlow)
-[![ASV](https://img.shields.io/badge/ASV-Supported-green)](https://github.com/glenjasper/AmpliconFlow)
-[![OTU](https://img.shields.io/badge/OTU-Supported-green)](https://github.com/glenjasper/AmpliconFlow)
 
 <div align="center">
-  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="550">
+  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="1010">
 </div>
 
 # AmpliconFlow
