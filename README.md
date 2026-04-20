@@ -234,11 +234,10 @@ Nenhuma ferramenta bioinformática precisa ser instalada manualmente.
 
 ```bash
 sudo apt install docker.io
-sudo usermod -aG docker $USER
-
-# aplicar permissões (ou reiniciar sessão)
-newgrp docker
+sudo usermod -aG docker user_local
 ```
+
+> Substitua **user_local** pelo usuário que irá executar o pipeline. Após adicionar o usuário ao grupo docker, é necessário encerrar e iniciar a sessão novamente (ou reconectar via SSH) para que a alteração tenha efeito.
 
 #### Obter o pipeline
 
