@@ -2,12 +2,12 @@
 
 **AmpliconFlow** é um pipeline reprodutível e escalável, desenvolvido em **Nextflow DSL2**, para análise de dados de sequenciamento de amplicons (por exemplo, 16S rRNA e ITS), suportando abordagens **ASV (Amplicon Sequence Variants)** e **OTU (Operational Taxonomic Units)**.
 
-O pipeline foi projetado para rodar de forma **consistente e transparente** em diferentes ambientes computacionais, incluindo:
+O pipeline foi projetado para rodar de forma **consistente** em diferentes ambientes computacionais, incluindo:
 
-- execução local (PATH do sistema),
-- execução com **Conda** (modo fallback, sem containers),
-- ambientes com **Docker**,
-- ambientes **HPC** com **Singularity/Apptainer**.
+- execução local (PATH do sistema)
+- execução com **Conda** (modo fallback, sem containers)
+- ambientes com **Docker**
+- ambientes **HPC** com **Singularity/Apptainer**
 
 ## 📌 Principais características
 
@@ -166,106 +166,169 @@ blast_max_target:       # maximum number of target sequences returned by BLAST
 blast_evalue:           # e-value cutoff for BLAST hits
 ```
 
-## ⚙️ Modos de execução e ambientes
+## ⚙️ Modos de execução
 
-O **executor** utilizado é sempre `local` (os processos são executados no nó atual).  
-O que muda entre os modos é **como as dependências são providas**.
+O AmpliconFlow pode ser executado em diferentes ambientes:
 
 | Profile       | Ambiente de execução        | Uso recomendado            |
 |---------------|-----------------------------|----------------------------|
 | `standard`    | PATH do sistema             | Uso local pessoal          |
-| `conda`       | Conda environments isolados | HPC sem containers         |
+| `conda`       | Conda environments          | HPC sem containers         |
 | `docker`      | Docker container            | Workstations / servidores |
 | `singularity` | Singularity / Apptainer     | HPC                        |
 
-## ⚙️ Dependências
+Todos os modos executam o mesmo pipeline e produzem resultados equivalentes.
 
-### 🔹 Execução local (`-profile standard`)
+## ⚙️ Requisito geral
 
-Quando executado **sem Conda ou containers**, as seguintes ferramentas devem estar disponíveis no `PATH`:
+O AmpliconFlow é executado via Nextflow, para todos os modos de execução.
 
-#### Obrigatórias
-- `python3`
-- `vsearch`
-- `cutadapt`
-- `blastn`
-- `makeblastdb`
-- `fastqc`
+Instale o Nextflow antes de usar o pipeline:
 
-> No modo `standard`, o pipeline verifica automaticamente a presença dessas ferramentas antes da execução.
+```bash
+curl -s https://get.nextflow.io | bash
+chmod +x nextflow
+sudo mv nextflow /usr/local/bin/
+```
 
-### 🔹 Execução com Conda (`-profile conda`)
+## 🐳 Modo Docker (recomendado)
 
-- As dependências são resolvidas automaticamente via arquivos em `envs/`
-- Não requer Docker nem Singularity
-- Ideal para ambientes HPC restritivos
+Executa o pipeline dentro de um container com todas as dependências já instaladas.
+Nenhuma ferramenta bioinformática precisa ser instalada manualmente.
 
-> No modo `conda`, **não é feita verificação do PATH do sistema**, pois todas as ferramentas são fornecidas pelos environments Conda.
+### Requisitos
 
-## 🐳 Containers
-
-### Docker
-
-- A imagem contém todas as dependências do pipeline:
-  - VSEARCH
-  - Cutadapt
-  - BLAST+
-  - FastQC
-  - Python + bibliotecas científicas
-- Requer acesso ao Docker daemon (usuário no grupo `docker`)
-
-### Singularity / Apptainer
-
-- A imagem é derivada automaticamente da imagem Docker
-- Compatível com ambientes HPC
-- Não requer privilégios de root
-- `autoMounts = true` habilitado no profile
-
-## ⚠️ Requisitos do sistema
-
-### Docker
 - Docker instalado
 - Usuário no grupo `docker`
-- Não é necessário `sudo`
 
-### Singularity / Apptainer
+### Instalação
+
+```bash
+sudo apt install docker.io
+sudo usermod -aG docker $USER
+
+# aplicar permissões (ou reiniciar sessão)
+newgrp docker
+```
+
+### Obter o pipeline
+
+```bash
+git clone https://github.com/glenjasper/AmpliconFlow.git
+cd AmpliconFlow
+```
+
+### Executar
+
+```bash
+nextflow run main.nf -profile docker -params-file config.yml
+```
+
+### Notas
+
+- A imagem Docker é baixada automaticamente na primeira execução (requer internet)
+- Execuções seguintes são mais rápidas (imagem já local)
+- Não é necessário instalar VSEARCH, BLAST, etc.
+- Recomendado para a maioria dos usuários
+
+## 🧪 Modo Conda
+
+Executa o pipeline criando automaticamente ambientes Conda com todas as dependências necessárias.
+
+### Requisitos
+
+- Conda, Mamba ou Micromamba instalado
+
+### Instalação (micromamba recomendado)
+
+```bash
+curl -Ls https://micro.mamba.pm/install.sh | bash
+```
+
+### Obter o pipeline
+
+```bash
+git clone https://github.com/glenjasper/AmpliconFlow.git
+cd AmpliconFlow
+```
+
+### Executar
+
+```bash
+nextflow run main.nf -profile conda -params-file config.yml
+```
+
+### Notas
+
+- Não requer Docker
+- Ideal para ambientes HPC
+- As dependências são instaladas automaticamente na primeira execução
+
+## 🧰 Modo Local (manual)
+
+Execução sem Conda ou containers. Todas as ferramentas devem ser instaladas manualmente.
+
+### Dependências obrigatórias
+
+- python3
+- vsearch
+- cutadapt
+- blastn
+- makeblastdb
+- fastqc
+
+### Obter o pipeline
+
+```bash
+git clone https://github.com/glenjasper/AmpliconFlow.git
+cd AmpliconFlow
+```
+
+### Executar
+
+```bash
+nextflow run main.nf -profile standard -params-file config.yml
+```
+
+### Notas
+
+- Todas as ferramentas devem estar no PATH
+- O pipeline verifica automaticamente a presença das dependências
+- Recomendado apenas para usuários avançados
+
+## 🧬 Modo Singularity / Apptainer
+
+Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
+
+### Requisitos
+
 - Apptainer ≥ 1.1
-- Instalado sem `setuid`
-- User namespaces habilitados
 
-## 🚀 Modos de execução
+### Obter o pipeline
 
-### ASV – Local (PATH do sistema)
 ```bash
-nextflow run AmpliconFlow -profile standard -params-file config_asv.yml
+git clone https://github.com/glenjasper/AmpliconFlow.git
+cd AmpliconFlow
 ```
-### OTU – Local (PATH do sistema)
+
+### Executar
+
 ```bash
-nextflow run AmpliconFlow -profile standard -params-file config_otu.yml
+nextflow run main.nf -profile singularity -params-file config.yml
 ```
-### ASV – Conda (sem containers)
+
+### Notas
+
+- A imagem é automaticamente derivada da imagem Docker
+- Compatível com ambientes HPC
+- Não requer privilégios de root
+
+## ⚡ Dica importante
+
+Use -resume para continuar execuções anteriores e evitar reprocessamento. Útil após falhas ou ajustes de parâmetros:
+
 ```bash
-nextflow run AmpliconFlow -profile conda -params-file config_asv.yml
-```
-### OTU – Conda (sem containers)
-```bash
-nextflow run AmpliconFlow -profile conda -params-file config_otu.yml
-```
-### ASV + Docker
-```bash
-nextflow run AmpliconFlow -profile docker -params-file config_asv.yml
-```
-### OTU + Docker
-```bash
-nextflow run AmpliconFlow -profile docker -params-file config_otu.yml
-```
-### ASV + Singularity (HPC)
-```bash
-nextflow run AmpliconFlow -profile singularity -params-file config_asv.yml
-```
-### OTU + Singularity (HPC)
-```bash
-nextflow run AmpliconFlow -profile singularity -params-file config_otu.yml
+nextflow run main.nf -profile docker -params-file config.yml -resume
 ```
 
 ## 🧪 Dados de teste
@@ -309,12 +372,3 @@ GitHub: <https://github.com/glenjasper>
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença **MIT**.
-
-
-
-
-
-
-
-
-
