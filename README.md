@@ -1,3 +1,16 @@
+[![Nextflow](https://img.shields.io/badge/Nextflow-%3E%3D22.10.0-brightgreen)](https://www.nextflow.io/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-blue)](https://docker.com)
+[![Singularity](https://img.shields.io/badge/Singularity-Enabled-blue)](https://sylabs.io/singularity/)
+[![Conda](https://img.shields.io/badge/Conda-Enabled-green)](https://conda.io)
+[![GitHub license](https://img.shields.io/github/license/glenjasper/AmpliconFlow)](https://github.com/glenjasper/AmpliconFlow/blob/main/LICENSE)
+[![Bioinformatics](https://img.shields.io/badge/Bioinformatics-16S%20rRNA%20%7C%20ITS-red)](https://github.com/glenjasper/AmpliconFlow)
+[![ASV](https://img.shields.io/badge/ASV-Supported-green)](https://github.com/glenjasper/AmpliconFlow)
+[![OTU](https://img.shields.io/badge/OTU-Supported-green)](https://github.com/glenjasper/AmpliconFlow)
+
+<div align="center">
+  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="550">
+</div>
+
 # AmpliconFlow
 
 **AmpliconFlow** é um pipeline reprodutível e escalável, desenvolvido em **Nextflow DSL2**, para análise de dados de sequenciamento de amplicons (por exemplo, 16S rRNA e ITS), suportando abordagens **ASV (Amplicon Sequence Variants)** e **OTU (Operational Taxonomic Units)**.
@@ -243,13 +256,12 @@ sudo usermod -aG docker user_local
 
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
-cd AmpliconFlow
 ```
 
 #### Executar
 
 ```bash
-nextflow run main.nf -profile docker -params-file config.yml
+nextflow run AmpliconFlow/main.nf -profile docker -params-file config.yml
 ```
 
 #### Notas
@@ -272,13 +284,12 @@ nextflow run main.nf -profile docker -params-file config.yml
 
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
-cd AmpliconFlow
 ```
 
 #### Executar
 
 ```bash
-nextflow run main.nf -profile singularity -params-file config.yml
+nextflow run AmpliconFlow/main.nf -profile singularity -params-file config.yml
 ```
 
 #### Notas
@@ -309,13 +320,12 @@ source ~/.bashrc
 
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
-cd AmpliconFlow
 ```
 
 #### Executar
 
 ```bash
-nextflow run main.nf -profile conda -params-file config.yml
+nextflow run AmpliconFlow/main.nf -profile conda -params-file config.yml
 ```
 
 #### Notas
@@ -341,13 +351,12 @@ nextflow run main.nf -profile conda -params-file config.yml
 
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
-cd AmpliconFlow
 ```
 
 #### Executar
 
 ```bash
-nextflow run main.nf -profile standard -params-file config.yml
+nextflow run AmpliconFlow/main.nf -profile standard -params-file config.yml
 ```
 
 #### Notas
@@ -361,7 +370,7 @@ nextflow run main.nf -profile standard -params-file config.yml
 ⚡ Use -resume para continuar execuções anteriores e evitar reprocessamento. Útil após falhas ou ajustes de parâmetros:
 
 ```bash
-nextflow run main.nf -profile docker -params-file config.yml -resume
+nextflow run AmpliconFlow/main.nf -profile docker -params-file config.yml -resume
 ```
 
 ## Dados de teste
