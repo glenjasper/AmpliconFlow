@@ -9,6 +9,36 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
 - ambientes com **Docker**
 - ambientes **HPC** com **Singularity/Apptainer**
 
+## Tabela de conteúdo
+
+- [Principais características](#-principais-características)
+- [Abordagens suportadas](#-abordagens-suportadas)
+  - [ASV (Amplicon Sequence Variants)](#-asv-amplicon-sequence-variants)
+  - [OTU (Operational Taxonomic Units)](#-otu-operational-taxonomic-units)
+- [Parâmetros de configuração](#-parâmetros-de-configuração)
+  - [Parâmetros gerais do pipeline](#parâmetros-gerais-do-pipeline)
+  - [Banco de dados de referência](#banco-de-dados-de-referência)
+  - [Merge de reads pareados](#merge-de-reads-pareados)
+  - [Remoção de primers](#remoção-de-primers)
+  - [Subamostragem (checagem de primers)](#subamostragem-checagem-de-primers)
+  - [Filtragem de reads](#filtragem-de-reads)
+  - [Parâmetros específicos para ASV](#parâmetros-específicos-para-asv)
+  - [Parâmetros específicos para OTU](#parâmetros-específicos-para-otu)
+- [Exemplo de arquivo de configuração (ASV)](#-exemplo-de-arquivo-de-configuração-para-asv)
+- [Modos de execução](#-modos-de-execução)
+- [Requisito geral (Nextflow)](#-requisito-geral)
+- [Modo Docker](#-modo-docker-recomendado)
+- [Modo Conda](#-modo-conda)
+- [Modo Local (manual)](#-modo-local-manual)
+- [Modo Singularity / Apptainer](#-modo-singularity--apptainer)
+- [Dica importante](#-dica-importante)
+- [Dados de teste](#-dados-de-teste)
+- [Saídas do pipeline](#-saídas-do-pipeline)
+  - [ASV](#-asv)
+  - [OTU](#-otu)
+- [Autor](#-autor)
+- [Licença](#-licença)
+
 ## 📌 Principais características
 
 - Implementado em **Nextflow DSL2**
