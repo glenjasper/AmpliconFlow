@@ -6,7 +6,7 @@
 [![Bioinformatics](https://img.shields.io/badge/Bioinformatics-16S%20rRNA%20%7C%20ITS-red)](https://github.com/glenjasper/AmpliconFlow)
 
 <div align="center">
-  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="1010">
+  <img src="assets/ampliconflow_logo.svg" alt="AmpliconFlow Logo" width="265%">
 </div>
 
 # AmpliconFlow
