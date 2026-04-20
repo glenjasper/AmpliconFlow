@@ -27,9 +27,9 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
 - [Exemplo de arquivo de configuração (ASV)](#exemplo-de-arquivo-de-configuração-para-asv)
 - [Modos de execução](#modos-de-execução)
   - [Modo Docker](#modo-docker-recomendado)
+  - [Modo Singularity / Apptainer](#modo-singularity--apptainer)
   - [Modo Conda](#modo-conda)
   - [Modo Local (manual)](#modo-local-manual)
-  - [Modo Singularity / Apptainer](#modo-singularity--apptainer)
 - [Dica importante](#dica-importante)
 - [Dados de teste](#dados-de-teste)
 - [Saídas do pipeline](#saídas-do-pipeline)
@@ -254,10 +254,41 @@ nextflow run main.nf -profile docker -params-file config.yml
 
 #### Notas
 
-- A imagem Docker é baixada automaticamente na primeira execução (requer internet)
-- Execuções seguintes são mais rápidas (imagem já local)
-- Não é necessário instalar VSEARCH, BLAST, etc.
+- A imagem é baixada automaticamente do Docker Hub na primeira execução (requer internet)
+- Execuções seguintes são mais rápidas, pois a imagem é armazenada localmente
+- A imagem é compartilhada entre usuários no sistema (dependendo da configuração do Docker)
+- Não é necessário instalar dependências manualmente
 - Recomendado para a maioria dos usuários
+
+### Modo Singularity / Apptainer
+
+🧬 Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
+
+#### Requisitos
+
+- Apptainer ≥ 1.1
+
+#### Obter o pipeline
+
+```bash
+git clone https://github.com/glenjasper/AmpliconFlow.git
+cd AmpliconFlow
+```
+
+#### Executar
+
+```bash
+nextflow run main.nf -profile singularity -params-file config.yml
+```
+
+#### Notas
+
+- A imagem é baixada automaticamente do Docker Hub na primeira execução (requer internet)
+- A imagem é convertida para formato SIF e armazenada no cache do usuário
+- Execuções seguintes são mais rápidas, pois a imagem é reutilizada do cache
+- Cada usuário mantém seu próprio cache de imagens
+- Não é necessário instalar dependências manualmente
+- Recomendado para ambientes HPC
 
 ### Modo Conda
 
@@ -323,33 +354,6 @@ nextflow run main.nf -profile standard -params-file config.yml
 - Todas as ferramentas devem estar no PATH
 - O pipeline verifica automaticamente a presença das dependências
 - Recomendado apenas para usuários avançados
-
-### Modo Singularity / Apptainer
-
-🧬 Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
-
-#### Requisitos
-
-- Apptainer ≥ 1.1
-
-#### Obter o pipeline
-
-```bash
-git clone https://github.com/glenjasper/AmpliconFlow.git
-cd AmpliconFlow
-```
-
-#### Executar
-
-```bash
-nextflow run main.nf -profile singularity -params-file config.yml
-```
-
-#### Notas
-
-- A imagem é automaticamente derivada da imagem Docker
-- Compatível com ambientes HPC
-- Não requer privilégios de root
 
 ## Dica importante
 
