@@ -150,6 +150,9 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 |----------|------|-------------|--------------|-----------|
 | cluster_identity | float | sim | 0.97 | Identidade mínima utilizada para a clusterização de reads em OTUs. |
 | blast_identity | float | sim | 0.97 | Identidade mínima exigida para atribuição taxonômica via BLAST. |
+| blast_coverage | float | sim | 0.90 | Cobertura mínima de consulta (query coverage) por HSP exigida pelo BLAST. |
+| blast_max_target | integer | sim | 10 | Número máximo de sequências-alvo retornadas pelo BLAST. |
+| blast_evalue | float | sim | 1e-5 | Cutoff de valor esperado (E-value) para filtragem de hits do BLAST. |
 
 ## Exemplo de arquivo de configuração (para `ASV`)
 
