@@ -241,7 +241,7 @@ nextflow run AmpliconFlow/main.nf --help
 sudo apt install docker.io
 sudo usermod -aG docker user_local
 ```
-> *Nota: Substitua **user_local** pelo seu usuário local. Após adicioná-lo ao grupo, encerre a sessão ou reconecte via SSH para que as permissões tenham efeito.*
+> *Substitua **user_local** pelo seu usuário local. Após adicioná-lo ao grupo, encerre a sessão ou reconecte via SSH para que as permissões tenham efeito.*
 
 #### Execução:
 ```bash
