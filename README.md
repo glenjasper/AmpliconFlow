@@ -37,10 +37,10 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
   - [Parâmetros específicos para OTU](#parâmetros-específicos-para-otu)
 - [Exemplo de arquivo de configuração (ASV)](#exemplo-de-arquivo-de-configuração-para-asv)
 - [Modos de execução](#modos-de-execução)
-  - [Modo Docker](#modo-docker-recomendado)
-  - [Modo Singularity / Apptainer](#modo-singularity--apptainer)
-  - [Modo Conda](#modo-conda)
-  - [Modo Local (manual)](#modo-local-manual)
+  - [1. Modo Docker (recomendado)](#1-modo-docker-recomendado)
+  - [2. Modo Singularity / Apptainer](#2-modo-singularity--apptainer)
+  - [3. Modo Conda](#3-modo-conda)
+  - [4. Modo Local / Standard (manual)](#4-modo-local--standard-manual)
 - [Dica Importante: Retomando Execuções](#dica-importante-retomando-execuções)
 - [Dados de teste](#dados-de-teste)
 - [Estrutura de saídas](#estrutura-de-saídas)
@@ -206,170 +206,104 @@ blast_evalue:           # e-value cutoff for BLAST hits
 
 ## Modos de execução
 
-O AmpliconFlow pode ser executado em diferentes ambientes:
+O AmpliconFlow detecta automaticamente o ambiente computacional através do perfil (`-profile`) selecionado. Todos os modos executam exatamente o mesmo fluxo analítico e produzem resultados biológicos equivalentes.
 
 | Profile       | Ambiente de execução        | Uso recomendado            |
 |---------------|-----------------------------|----------------------------|
-| `standard`    | PATH do sistema             | Uso local pessoal          |
-| `conda`       | Conda environments          | HPC sem containers         |
-| `docker`      | Docker container            | Workstations / servidores |
+| `docker`      | Docker container            | Workstations / servidores  |
 | `singularity` | Singularity / Apptainer     | HPC                        |
-
-Todos os modos executam o mesmo pipeline e produzem resultados equivalentes.
+| `conda`       | Conda environments          | HPC sem containers         |
+| `standard`    | PATH do sistema             | Uso local pessoal          |
 
 ### Requisito geral
 
-O AmpliconFlow é executado via **Nextflow**, necessário para todos os modos.
-
-Instale o Nextflow antes de usar o pipeline:
-
+O AmpliconFlow é executado via **Nextflow**. O **Nextflow** é o único requisito obrigatório instalado no sistema hospedeiro para todas as formas de execução:
 ```bash
 curl -s https://get.nextflow.io | bash
 chmod +x nextflow
 sudo mv nextflow /usr/local/bin/
 ```
 
-### Help
-
-Clone o repositório e visualize as opções disponíveis:
-
+Clone o repositório antes de iniciar:
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
 
+# Help
 nextflow run AmpliconFlow/main.nf --help
 ```
 
-### Modo Docker (recomendado)
+### 1. Modo Docker (recomendado)
+🐳 Executa todo o pipeline isolado dentro de um container com todas as dependências bioinformáticas pré-instaladas de fábrica. Nenhuma ferramenta precisa ser instalada manualmente.
 
-🐳 Executa o pipeline dentro de um container com todas as dependências já instaladas.
-Nenhuma ferramenta bioinformática precisa ser instalada manualmente.
-
-#### Requisitos
-
-- Docker instalado
-- Usuário no grupo `docker`
-
-#### Instalação
-
+* **Requisitos:** Docker instalado e seu usuário adicionado ao grupo `docker`.
 ```bash
+# Instalação rápida do Docker (caso necessário)
 sudo apt install docker.io
 sudo usermod -aG docker user_local
 ```
+> *Nota: Substitua **user_local** pelo seu usuário local. Após adicioná-lo ao grupo, encerre a sessão ou reconecte via SSH para que as permissões tenham efeito.*
 
-> Substitua **user_local** pelo usuário que irá executar o pipeline. Após adicionar o usuário ao grupo docker, é necessário encerrar e iniciar a sessão novamente (ou reconectar via SSH) para que a alteração tenha efeito.
-
-#### Obter o pipeline
-
-```bash
-git clone https://github.com/glenjasper/AmpliconFlow.git
-```
-
-#### Executar
-
+#### Execução:
 ```bash
 nextflow run AmpliconFlow/main.nf -profile docker -params-file config.yml
 ```
 
-#### Notas
+#### Notas Técnicas:
+- **Download automático:** A imagem é baixada diretamente do Docker Hub na primeira execução (requer conexão com a internet).
+- **Uso do cache local:** As execuções seguintes são muito mais rápidas, pois a imagem fica armazenada localmente na máquina.
+- **Compartilhamento de recursos:** A imagem pode ser compartilhada entre múltiplos usuários no mesmo sistema (dependendo das políticas do seu Docker).
+- **Conveniência absoluta:** Não é necessário instalar nenhuma dependência de bioinformática manualmente no hospedeiro.
 
-- A imagem é baixada automaticamente do Docker Hub na primeira execução (requer internet)
-- Execuções seguintes são mais rápidas, pois a imagem é armazenada localmente
-- A imagem é compartilhada entre usuários no sistema (dependendo da configuração do Docker)
-- Não é necessário instalar dependências manualmente
-- Recomendado para a maioria dos usuários
+### 2. Modo Singularity / Apptainer
+🧬 Ideal para clusters institucionais e ambientes multiusuário de Computação de Alto Desempenho (HPC), onde restrições rígidas de segurança impedem o uso de permissões de `root`.
 
-### Modo Singularity / Apptainer
+* **Requisitos:** Apptainer (≥ 1.1) ou Singularity instalado no cluster.
 
-🧬 Executa o pipeline em ambientes HPC utilizando containers sem necessidade de permissões de root.
-
-#### Requisitos
-
-- Apptainer ≥ 1.1
-
-#### Obter o pipeline
-
-```bash
-git clone https://github.com/glenjasper/AmpliconFlow.git
-```
-
-#### Executar
-
+#### Execução:
 ```bash
 nextflow run AmpliconFlow/main.nf -profile singularity -params-file config.yml
 ```
 
-#### Notas
+#### Notas Técnicas:
+- **Conversão dinâmica:** O Nextflow baixa a imagem do Docker Hub na primeira corrida (requer internet) e a converte automaticamente para o formato nativo `.sif`.
+- **Isolamento de cache:** O arquivo `.sif` resultante é armazenado na pasta de cache do próprio usuário, tornando as execuções seguintes imediatas.
+- **Ambiente multiusuário:** Cada pesquisador mantém e gerencia seu próprio cache de imagens dentro do cluster de forma independente.
+- **Conveniência:** Dispensa completamente a instalação manual de ferramentas pelos administradores do cluster.
 
-- A imagem é baixada automaticamente do Docker Hub na primeira execução (requer internet)
-- A imagem é convertida para formato SIF e armazenada no cache do usuário
-- Execuções seguintes são mais rápidas, pois a imagem é reutilizada do cache
-- Cada usuário mantém seu próprio cache de imagens
-- Não é necessário instalar dependências manualmente
-- Recomendado para ambientes HPC
+### 3. Modo Conda
+🧪 Cria e gerencia ambientes virtuais isolados dinamicamente para cada processo do pipeline em tempo de execução.
 
-### Modo Conda
-
-🧪 Executa o pipeline criando automaticamente ambientes Conda com todas as dependências necessárias.
-
-#### Requisitos
-
-- Conda, Mamba ou Micromamba instalado
-
-#### Instalação (micromamba recomendado)
-
+* **Requisitos:** Conda, Mamba ou Micromamba instalado no sistema.
 ```bash
+# Instalação recomendada via Micromamba
 curl -Ls https://micro.mamba.pm/install.sh | bash
 source ~/.bashrc
 ```
 
-#### Obter o pipeline
-
-```bash
-git clone https://github.com/glenjasper/AmpliconFlow.git
-```
-
-#### Executar
-
+#### Execução:
 ```bash
 nextflow run AmpliconFlow/main.nf -profile conda -params-file config.yml
 ```
 
-#### Notas
+#### Notas Técnicas:
+- **Independência de Docker:** Não requer a presença de Docker, Singularity ou privilégios de container na máquina.
+- **HPC Fallback:** É o modo ideal para submissão de tarefas em clusters (como Slurm ou PBS) que não possuem suporte a virtualização.
+- **Instalação transparente:** Todas as dependências bioinformáticas são resolvidas e instaladas de forma 100% automatizada na primeira execução do pipeline.
 
-- Não requer Docker
-- Ideal para ambientes HPC
-- As dependências são instaladas automaticamente na primeira execução
+### 4. Modo Local / Standard (manual)
+🧰 Execução nativa utilizando as ferramentas diretamente instaladas no sistema operacional da sua máquina física.
 
-### Modo Local (manual)
+* **Ferramentas obrigatórias no PATH:** `python3`, `vsearch`, `cutadapt`, `blastn`, `makeblastdb` e `fastqc`.
 
-🧰 Execução sem Conda ou containers. Todas as ferramentas devem ser instaladas manualmente.
-
-#### Dependências obrigatórias
-
-- python3
-- vsearch
-- cutadapt
-- blastn
-- makeblastdb
-- fastqc
-
-#### Obter o pipeline
-
-```bash
-git clone https://github.com/glenjasper/AmpliconFlow.git
-```
-
-#### Executar
-
+#### Execução:
 ```bash
 nextflow run AmpliconFlow/main.nf -profile standard -params-file config.yml
 ```
 
-#### Notas
-
-- Todas as ferramentas devem estar no PATH
-- O pipeline verifica automaticamente a presença das dependências
-- Recomendado apenas para usuários avançados
+#### Notas Técnicas:
+- **Uso estrito do PATH:** Todas as ferramentas citadas precisam estar obrigatoriamente configuradas e acessíveis nas variáveis de ambiente do seu sistema.
+- **Validação prévia:** O pipeline conta com uma rotina automatizada que verifica rigorosamente a presença e a integridade de todas as dependências antes de começar a processar os FASTQs.
+- **Perfil de usuário:** Altamente recomendado apenas para usuários avançados ou para debuggers do código do workflow.
 
 ## Dica Importante: Retomando Execuções
 
