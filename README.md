@@ -109,6 +109,8 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 |----------|------|-------------|--------------|-----------|
 | database_type | string | sim | — | Tipo do banco de dados taxonômico. `silva` indica banco de rRNA (ex.: 16S/18S). `unite` indica banco específico para ITS (fungos). |
 | database_fasta | path | sim | — | Arquivo FASTA contendo o banco de dados de referência correspondente ao `database_type`. |
+| silva_taxmap | path | condicional | — | Arquivo de mapeamento taxonômico do SILVA (ex.: `*_tax_silva.txt`). Obrigatório apenas quando `database_type = silva`. |
+| silva_taxslv | path | condicional | — | Arquivo de sequências taxonômicas do SILVA (ex.: `*_tax_silva.fasta`). Obrigatório apenas quando `database_type = silva`. |
 
 ### Merge de reads pareados
 
@@ -151,7 +153,7 @@ A tabela abaixo descreve todos os parâmetros suportados, seus valores padrão e
 | cluster_identity | float | sim | 0.97 | Identidade mínima utilizada para a clusterização de reads em OTUs. |
 | blast_identity | float | sim | 0.97 | Identidade mínima exigida para atribuição taxonômica via BLAST. |
 | blast_coverage | float | sim | 0.90 | Cobertura mínima de consulta (query coverage) por HSP exigida pelo BLAST. |
-| blast_max_target | integer | sim | 10 | Número máximo de sequências-alvo retornadas pelo BLAST. |
+| blast_max_target | integer | sim | 20 | Número máximo de sequências-alvo retornadas pelo BLAST. |
 | blast_evalue | float | sim | 1e-5 | Cutoff de valor esperado (E-value) para filtragem de hits do BLAST. |
 
 ## Exemplo de arquivo de configuração (para `ASV`)
