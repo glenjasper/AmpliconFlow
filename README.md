@@ -41,11 +41,9 @@ O pipeline foi projetado para rodar de forma **consistente** em diferentes ambie
   - [Modo Singularity / Apptainer](#modo-singularity--apptainer)
   - [Modo Conda](#modo-conda)
   - [Modo Local (manual)](#modo-local-manual)
-- [Dica importante](#dica-importante)
+- [Dica Importante: Retomando Execuções](#dica-importante-retomando-execuções)
 - [Dados de teste](#dados-de-teste)
-- [Saídas do pipeline](#saídas-do-pipeline)
-  - [ASV](#asv)
-  - [OTU](#otu)
+- [Estrutura de saídas](#estrutura-de-saídas)
 - [Autor](#autor)
 - [Licença](#licença)
 
@@ -373,9 +371,9 @@ nextflow run AmpliconFlow/main.nf -profile standard -params-file config.yml
 - O pipeline verifica automaticamente a presença das dependências
 - Recomendado apenas para usuários avançados
 
-## Dica importante
+## Dica Importante: Retomando Execuções
 
-⚡ Use -resume para continuar execuções anteriores e evitar reprocessamento. Útil após falhas ou ajustes de parâmetros:
+Se o seu pipeline falhar ou se você precisar ajustar um parâmetro no arquivo de configuração, use a flag **`-resume`**. Isso fará com que o Nextflow reaproveite os resultados armazenados em cache das etapas que não sofreram alterações, poupando tempo computacional:
 
 ```bash
 nextflow run AmpliconFlow/main.nf -profile docker -params-file config.yml -resume
@@ -394,24 +392,14 @@ O pipeline foi validado utilizando:
 - `.fastq.gz`
 - `.fq.gz`
 
-## Saídas do pipeline
+## Estrutura de saídas
 
-As saídas finais são organizadas por abordagem.
-
-### ASV
+Ao final da execução com sucesso, os resultados (ASV ou OTU) consolidados estarão organizados no diretório configurado:
 
 ```text
-output_path/
+results/
 └── abundance/
-    └── *.csv
-```
-
-### OTU
-
-```text
-output_path/
-└── abundance/
-    └── *.csv
+    └── abundances.csv
 ```
 
 ## Autor
