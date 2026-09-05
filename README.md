@@ -176,6 +176,10 @@ output_path: /your_path/output
 database_type: silva
 database_fasta: /your_path/db/SILVA_138.2_SSURef_NR99_tax_silva.fasta
 
+# Required only for SILVA database
+silva_taxmap: /your_path/db/taxmap_slv_ssu_ref_nr_138.2.txt.gz
+silva_taxslv: /your_path/db/tax_slv_ssu_138.2.txt.gz
+
 # Resources
 threads: 20
 
