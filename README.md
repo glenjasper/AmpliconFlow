@@ -336,7 +336,7 @@ Ao final da execução com sucesso, os resultados (ASV ou OTU) consolidados esta
 ```text
 results/
 └── abundance/
-    └── abundances.csv
+    └── abundances.tsv
 ```
 
 ## Autor
