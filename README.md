@@ -239,7 +239,7 @@ Com o Java configurado no sistema, baixe e configure o executável:
 ```bash
 curl -s https://get.nextflow.io | bash
 chmod +x nextflow
-sudo mv nextflow /usr/local/bin/
+sudo mv nextflow /usr/local/bin
 ```
 
 #### 3. Obter o pipeline e testar
@@ -292,11 +292,12 @@ nextflow run AmpliconFlow/main.nf -profile singularity -params-file config.yml
 ### 3. Modo Conda
 🧪 Cria e gerencia ambientes virtuais isolados dinamicamente para cada processo do pipeline em tempo de execução.
 
-* **Requisito Obrigatório:** Devido aos requisitos nativos e de performance do Nextflow moderno, o **Micromamba** é o gerenciador padrão obrigatório para este perfil. 
+* **Requisitos:** Devido aos requisitos nativos e de performance do Nextflow moderno, o **Micromamba** é o gerenciador padrão obrigatório para este perfil.
 ```bash
 # Instalação do Micromamba
 curl -Ls https://micro.mamba.pm/install.sh | bash
-source ~/.bashrc
+sudo cp "\$HOME/.local/bin/micromamba" /usr/local/bin
+sudo chmod +x /usr/local/bin/micromamba
 ```
 
 #### Execução:
@@ -305,7 +306,7 @@ nextflow run AmpliconFlow/main.nf -profile conda -params-file config.yml
 ```
 
 #### Notas Técnicas:
-- **Alta Performance Nativa:** O uso do Micromamba garante que a resolução e o download das dependências bioinformáticas ocorram na velocidade máxima permitida pela rede.
+- **Performance Nativa:** O uso do Micromamba garante que a resolução e o download das dependências bioinformáticas ocorram na velocidade máxima permitida pela rede.
 - **Independência de Docker:** Não requer a presença de Docker, Singularity/Apptainer ou privilégios de administrador (`root`) na máquina hospedeira.
 - **HPC Fallback:** É o modo ideal para submissão de tarefas e gerenciamento de filas em clusters institucionais (como Slurm ou PBS) que não possuem suporte a virtualização.
 - **Isolamento Total:** Os ambientes de cada ferramenta são construídos automaticamente na primeira corrida do pipeline e armazenados com segurança na pasta de cache do usuário.
