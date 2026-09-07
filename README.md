@@ -226,18 +226,28 @@ O AmpliconFlow detecta automaticamente o ambiente computacional através do perf
 
 ### Requisito geral
 
-O AmpliconFlow é executado via **Nextflow**. O **Nextflow** é o único requisito obrigatório instalado no sistema hospedeiro para todas as formas de execução:
+O AmpliconFlow é gerenciado e executado via **Nextflow**. O único requisito obrigatório instalado diretamente no sistema hospedeiro é o **Java 17 (ou superior)** acompanhado do binário do Nextflow.
+
+#### 1. Instalar o Java 17 e dependências (Ubuntu/Debian)
+```bash
+sudo apt update && sudo apt install -y openjdk-17-jre-headless curl
+```
+*(Para sistemas RedHat/CentOS/Fedora, utilize: `sudo dnf install -y java-17-openjdk-headless curl`)*
+
+#### 2. Instalar o Nextflow
+Com o Java configurado no sistema, baixe e configure o executável:
 ```bash
 curl -s https://get.nextflow.io | bash
 chmod +x nextflow
 sudo mv nextflow /usr/local/bin/
 ```
 
-Clone o repositório antes de iniciar:
+#### 3. Obter o pipeline e testar
+Clone o repositório oficial e visualize o menu de ajuda para validar se todas as dependências básicas estão respondendo:
 ```bash
 git clone https://github.com/glenjasper/AmpliconFlow.git
 
-# Help
+# Help do pipeline
 nextflow run AmpliconFlow/main.nf --help
 ```
 
