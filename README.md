@@ -296,7 +296,7 @@ nextflow run AmpliconFlow/main.nf -profile singularity -params-file config.yml
 ```bash
 # Instalação do Micromamba
 curl -Ls https://micro.mamba.pm/install.sh | bash
-sudo cp "\$HOME/.local/bin/micromamba" /usr/local/bin
+sudo cp $HOME/.local/bin/micromamba /usr/local/bin
 sudo chmod +x /usr/local/bin/micromamba
 ```
 
